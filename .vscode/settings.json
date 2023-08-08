@@ -1,0 +1,11 @@
+{
+    "swift.buildArguments": [
+        "-Xcc", "-isysroot", "-Xcc", "/home/kabiroberai/.swiftpm/swift-sdks/darwin.artifactbundle/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.4.sdk",
+        "-Xcc", "-target", "-Xcc", "arm64-apple-ios15",
+        "-Xswiftc", "-sdk", "-Xswiftc", "/home/kabiroberai/.swiftpm/swift-sdks/darwin.artifactbundle/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.4.sdk",
+        "-Xswiftc", "-target", "-Xswiftc", "arm64-apple-ios15",
+        "-Xswiftc", "-resource-dir", "-Xswiftc", "/home/kabiroberai/.swiftpm/swift-sdks/darwin.artifactbundle/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift"
+    ],
+    // "lldb.library": "/usr/local/swift/lib/liblldb.so",
+    "lldb.launch.expressions": "native",
+}

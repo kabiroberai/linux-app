@@ -1,0 +1,46 @@
+{
+    "configurations": [
+        {
+            "name": "Attach",
+            "type": "lldb",
+            "request": "custom",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "targetCreateCommands": [
+                "settings set symbols.enable-lldb-index-cache true",
+                "platform select remote-ios",
+                "target create --no-dependents ${workspaceFolder:MyApp}/.build/debug/MyApp.app/MyApp"
+            ],
+            "processCreateCommands": [
+                "process connect connect://localhost:1234",
+                "process attach --waitfor",
+                "cont"
+            ]
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Debug MyApp",
+            "program": "${workspaceFolder:MyApp}/.build/debug/MyApp",
+            "args": [],
+            "cwd": "${workspaceFolder:MyApp}",
+            "preLaunchTask": "swift: Build Debug MyApp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Release MyApp",
+            "program": "${workspaceFolder:MyApp}/.build/release/MyApp",
+            "args": [],
+            "cwd": "${workspaceFolder:MyApp}",
+            "preLaunchTask": "swift: Build Release MyApp"
+        }
+    ]
+}
