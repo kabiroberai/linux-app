@@ -35,6 +35,7 @@ clean:
 debug:
 	idevicedebugserverproxy 1234
 
+# https://github.com/apple/swift/issues/67789
 fix-lsp: build
 	rm -rf .build/aarch64-unknown-linux-gnu/debug/ModuleCache
 	mkdir -p .build/aarch64-unknown-linux-gnu/debug
