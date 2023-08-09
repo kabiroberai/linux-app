@@ -37,8 +37,7 @@ debug:
 
 # https://github.com/apple/swift/issues/67789
 fix-lsp: all
-	rm -rf .build/aarch64-unknown-linux-gnu/debug/ModuleCache
-	mkdir -p .build/aarch64-unknown-linux-gnu/debug
-	cp -a .build/arm64-apple-ios/debug/ModuleCache .build/aarch64-unknown-linux-gnu/debug/
+	rm -rf .build/aarch64-unknown-linux-gnu
+	ln -s arm64-apple-ios .build/aarch64-unknown-linux-gnu
 
 .PHONY: all bundle sign install package do clean debug fix-lsp
