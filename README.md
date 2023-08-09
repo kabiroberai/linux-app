@@ -9,11 +9,11 @@ This is a sample project from my SwiftTO talk "Beyond Xcode: Batteries Not Inclu
 Note that this has been tested on Ubuntu 22.04 for AArch64. Your mileage may vary on other Linux distros/setups.
 
 Prerequisites:
-- [ideviceinstaller](https://github.com/libimobiledevice/ideviceinstaller) (on or after https://github.com/libimobiledevice/ideviceinstaller/commit/7fbc6d180105b798af619c7994ed271cede2559e)
+- [ideviceinstaller](https://github.com/libimobiledevice/ideviceinstaller) (on or after [7fbc6d1](https://github.com/libimobiledevice/ideviceinstaller/commit/7fbc6d180105b798af619c7994ed271cede2559e))
 - [libimobiledevice](https://github.com/libimobiledevice/libimobiledevice) CLI tools (for debugging)
 - [Swift 5.9](https://swift.org/download)
 
-1. Install my swift-package manager fork
+1. Install my `swift-package-manager` fork
     1. Clone the repo: `git clone https://github.com/kabiroberai/swift-package-manager -b kabir/develop`.
     3. Run `swift build`.
     4. Copy the built `swift-package`, `swift-build`, `swift-run`, `swift-experimental-sdk` tools (in `.build/debug`) into your Swift 5.9 toolchain's bin directory, overwriting existing files.
