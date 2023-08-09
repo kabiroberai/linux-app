@@ -22,7 +22,7 @@ bundle:
 
 sign:
 	cp -a Resources/embedded.mobileprovision $(APP)/
-	sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.plist > $(BUILD)/entitlements.plist
+	@sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.plist > $(BUILD)/entitlements.plist
 	$$LDID -KResources/identity.p12 -S$(BUILD)/entitlements.plist $(APP)
 
 install:
@@ -33,7 +33,6 @@ do: package install
 
 clean:
 	swift package clean
-	rm -rf $(APP)
 
 debug:
 	idevicedebugserverproxy 1234
