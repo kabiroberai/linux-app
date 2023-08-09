@@ -16,9 +16,10 @@ all:
 bundle:
 	rm -rf $(APP)
 	mkdir -p $(APP)
-	cp -a $(EXEC) Resources/Info.plist Resources/embedded.mobileprovision $(APP)/
+	cp -a $(EXEC) Resources/Info.plist $(APP)/
 
 sign:
+	cp -a Resources/embedded.mobileprovision $(APP)/
 	sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.xml > $(BUILD)/entitlements.xml
 	$$LDID -KResources/identity.p12 -S$(BUILD)/entitlements.xml $(APP)
 
