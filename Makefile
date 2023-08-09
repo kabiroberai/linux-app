@@ -36,6 +36,7 @@ debug:
 	idevicedebugserverproxy 1234
 
 # https://github.com/apple/swift/issues/67789
+# https://github.com/apple/sourcekit-lsp/issues/786
 fix-lsp: all
 	rm -rf .build/aarch64-unknown-linux-gnu
 	ln -s arm64-apple-ios .build/aarch64-unknown-linux-gnu
