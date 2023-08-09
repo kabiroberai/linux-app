@@ -20,8 +20,8 @@ bundle:
 
 sign:
 	cp -a Resources/embedded.mobileprovision $(APP)/
-	sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.xml > $(BUILD)/entitlements.xml
-	$$LDID -KResources/identity.p12 -S$(BUILD)/entitlements.xml $(APP)
+	sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.plist > $(BUILD)/entitlements.plist
+	$$LDID -KResources/identity.p12 -S$(BUILD)/entitlements.plist $(APP)
 
 install:
 	ideviceinstaller install $(APP)
