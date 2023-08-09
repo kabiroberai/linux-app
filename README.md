@@ -32,7 +32,7 @@ These steps are designed for VSCode but you can adapt them to your preferred LSP
 1. Set up [SourceKit-LSP](https://github.com/apple/sourcekit-lsp) for your IDE. For VSCode, this means installing the "Swift" extension.
 2. Update the paths in `.vscode/settings.json` to use your home directory instead of `/home/kabiroberai`
 
-Note that SourceKit-LSP does not officially support SwiftSDKs yet. Steps 2 and 3 are hacky workarounds for this limitation, and the IDE experience will be sub-optimal until official support lands. See <https://github.com/apple/sourcekit-lsp/issues/786>.
+Note that SourceKit-LSP does not officially support SwiftSDKs yet. While this repo implements a workaround, IDE experience will be sub-optimal until official support lands. See <https://github.com/apple/sourcekit-lsp/issues/786>.
 
 ## Debugging
 
