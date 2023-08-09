@@ -7,7 +7,7 @@ EXEC := $(BUILD)/$(PRODUCT)
 APP := $(BUILD)/$(PRODUCT).app
 
 TEAMID := $(shell openssl x509 -noout -subject -in Resources/identity.p12 | grep -Po 'OU\s*=\s*\K.*?(?=,)')
-SDK := $(shell swift experimental-sdk configuration show darwin arm64-apple-ios | grep -Po 'sdkRootPath: \K/.*/darwin.artifactbundle')
+SDK := $(shell swift experimental-sdk configuration show darwin $(TARGET) | grep -Po 'sdkRootPath: \K/.*/darwin.artifactbundle')
 export LDID := $(SDK)/toolset/bin/ldid
 
 all:
