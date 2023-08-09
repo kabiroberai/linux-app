@@ -10,7 +10,9 @@ TEAMID := $(shell openssl x509 -noout -subject -in Resources/identity.p12 | grep
 SDK := $(shell swift experimental-sdk configuration show darwin $(TARGET) | grep -Po 'sdkRootPath: \K/.*/darwin.artifactbundle')
 export LDID := $(SDK)/toolset/bin/ldid
 
-all:
+all: build fix-lsp
+
+build:
 	swift build -c $(CONFIG) --experimental-swift-sdk $(TARGET) --product $(PRODUCT)
 
 bundle:
@@ -38,8 +40,8 @@ debug:
 
 # https://github.com/apple/swift/issues/67789
 # https://github.com/apple/sourcekit-lsp/issues/786
-fix-lsp: all
-	rm -rf .build/aarch64-unknown-linux-gnu
-	ln -s arm64-apple-ios .build/aarch64-unknown-linux-gnu
+fix-lsp:
+	@rm -rf .build/aarch64-unknown-linux-gnu
+	@ln -s arm64-apple-ios .build/aarch64-unknown-linux-gnu
 
-.PHONY: all bundle sign install package do clean debug fix-lsp
+.PHONY: all build bundle sign install package do clean debug fix-lsp
