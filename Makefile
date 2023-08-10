@@ -18,7 +18,7 @@ build:
 bundle:
 	rm -rf $(APP)
 	mkdir -p $(APP)
-	cp -a $(EXEC) Resources/Info.plist $(APP)/
+	cp -a $(EXEC) Resources/Info.plist Resources/secret.jpg $(APP)/
 
 sign:
 	cp -a Resources/embedded.mobileprovision $(APP)/

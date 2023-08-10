@@ -5,13 +5,15 @@
 @implementation KOViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UILabel *label = [UILabel new];
-    label.text = @"Hello from Objective-C!";
-    [self.view addSubview:label];
-    label.translatesAutoresizingMaskIntoConstraints = NO;
+    UIImageView *iv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"secret.jpg"]];
+    [self.view addSubview:iv];
+    iv.translatesAutoresizingMaskIntoConstraints = NO;
+    iv.contentMode = UIViewContentModeScaleAspectFit;
     [NSLayoutConstraint activateConstraints:@[
-        [label.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [label.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+        [iv.centerXAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.centerXAnchor],
+        [iv.centerYAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.centerYAnchor],
+        [iv.widthAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.widthAnchor constant:-16.0],
+        [iv.heightAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.heightAnchor],
     ]];
 }
 @end
