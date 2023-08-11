@@ -4,6 +4,10 @@ A sample iOS app designed for cross-compilation on Linux.
 
 This is a sample project from my SwiftTO talk "Beyond Xcode: Batteries Not Included".
 
+## Slides
+
+See [Slides.pdf](/Slides.pdf)
+
 ## Setup
 
 Note that this has been tested on Ubuntu 22.04 for AArch64. Your mileage may vary on other Linux distros/setups.
