@@ -8,5 +8,5 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 
-Resources/identity.p12
-Resources/embedded.mobileprovision
+Signing/identity.p12
+Signing/embedded.mobileprovision

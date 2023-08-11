@@ -6,7 +6,7 @@ BUILD := .build/$(TARGET)/$(CONFIG)
 EXEC := $(BUILD)/$(PRODUCT)
 APP := $(BUILD)/$(PRODUCT).app
 
-TEAMID := $(shell openssl x509 -noout -subject -in Resources/identity.p12 | grep -Po 'OU\s*=\s*\K.*?(?=,)')
+TEAMID := $(shell openssl x509 -noout -subject -in Signing/identity.p12 | grep -Po 'OU\s*=\s*\K.*?(?=,)')
 SDK := $(shell swift experimental-sdk configuration show darwin $(TARGET) | grep -Po 'sdkRootPath: \K.*\.artifactbundle')
 export LDID := $(SDK)/toolset/bin/ldid
 
@@ -17,13 +17,13 @@ build:
 
 bundle:
 	rm -rf $(APP)
-	mkdir -p $(APP)
-	cp -a $(EXEC) Resources/Info.plist $(APP)/
+	cp -a Resources $(APP)
+	cp -a $(EXEC) $(APP)/
 
 sign:
-	cp -a Resources/embedded.mobileprovision $(APP)/
-	@sed 's/$$(teamID)/$(TEAMID)/g' Resources/entitlements.plist > $(BUILD)/entitlements.plist
-	$$LDID -KResources/identity.p12 -S$(BUILD)/entitlements.plist $(APP)
+	cp -a Signing/embedded.mobileprovision $(APP)/
+	@sed 's/$$(teamID)/$(TEAMID)/g' Signing/entitlements.plist > $(BUILD)/entitlements.plist
+	$$LDID -KSigning/identity.p12 -S$(BUILD)/entitlements.plist $(APP)
 
 install:
 	ideviceinstaller install $(APP)
