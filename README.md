@@ -6,7 +6,7 @@ This is a sample project from my SwiftTO talk "Beyond Xcode: Batteries Not Inclu
 
 ## Slides
 
-See [Slides.pdf](/Slides.pdf)
+See [Slides.pdf](http://raw.githubusercontent.com/kabiroberai/linux-app/main/Slides.pdf).
 
 ## Setup
 
