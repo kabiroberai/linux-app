@@ -1,13 +1,104 @@
 import PackagePlugin
+import Foundation
 
 @main struct Plugin: CommandPlugin {
     func performCommand(
         context: PluginContext,
         arguments: [String]
     ) async throws {
-        try await packageManager.build(
-            .product("MyApp"),
-            parameters: .init()
-        )
+        print("Initializing...")
+
+        var extractor = ArgumentExtractor(arguments)
+        let identity = extractor.extractOption(named: "identity").first.map(Path.init)
+        let profile = extractor.extractOption(named: "profile").first.map(Path.init)
+
+        if identity == nil {
+            print("warning: No identity provided; will ad-hoc sign. Use '-' to make this explicit.")
+        } else if profile == nil {
+            print("warning: Signing without a profile.")
+        }
+
+        let executables = context.package.products(ofType: ExecutableProduct.self)
+        let executable: ExecutableProduct
+        if executables.count == 1 {
+            executable = executables[0]
+        } else {
+            throw StringError("Your package should include 1 executable product")
+        }
+        let parameters = PackageManager.BuildParameters()
+        let output = try packageManager.build(.product(executable.name), parameters: parameters)
+
+        print("\(output.logText)", terminator: "")
+
+        let execPath = output.builtArtifacts.first(where: { $0.kind == .executable })!.path
+        let appDirPath = context.pluginWorkDirectory.appending("\(executable.name).app")
+        try? FileManager.default.removeItem(atPath: appDirPath.string)
+        try FileManager.default.createDirectory(atPath: appDirPath.string, withIntermediateDirectories: true)
+
+        guard let sourceModule = executable.mainTarget.sourceModule
+            else { throw StringError("Expected main target to be a source module") }
+        let resources = sourceModule.sourceFiles.filter { $0.type == .resource }
+        guard let plist = resources.first(where: { $0.path.lastComponent == "PackInfo.plist" })?.path
+            else { throw StringError("Expected main target to contain a PackInfo.plist") }
+        guard let entitlements = resources.first(where: { $0.path.lastComponent == "\(executable.name).entitlements" })?.path
+            else { throw StringError("Expected main target to contain an \(executable.name).entitlements") }
+
+        let buildDir = execPath.removingLastComponent()
+
+        var filesToCopy = [execPath] + (profile.map { [$0] } ?? [])
+        var targets = executable.targets
+        while let target = targets.popLast() {
+            if let binaryTarget = target as? BinaryArtifactTarget {
+                filesToCopy += [binaryTarget.artifact]
+            } else if let sourceTarget = target as? SourceModuleTarget {
+                filesToCopy += sourceTarget.sourceFiles.filter { $0.type == .resource }.map(\.path)
+            }
+            for dependency in target.dependencies {
+                switch dependency {
+                case .product(let product):
+                    if let dylib = product as? LibraryProduct, dylib.kind == .dynamic {
+                        let lib = buildDir.appending("lib\(dylib.name).dylib")
+                        filesToCopy += [lib]
+                    }
+                    targets.append(contentsOf: product.targets)
+                case .target(let target):
+                    targets.append(target)
+                @unknown default:
+                    break
+                }
+            }
+        }
+
+        for file in filesToCopy {
+            switch file {
+            case plist:
+                try FileManager.default.copyItem(atPath: file.string, toPath: appDirPath.appending("Info.plist").string)
+            case profile:
+                try FileManager.default.copyItem(
+                    atPath: file.string,
+                    toPath: appDirPath.appending("embedded.mobileprovision").string
+                )
+            case entitlements:
+                break
+            default:
+                try FileManager.default.copyItem(atPath: file.string, toPath: appDirPath.appending(file.lastComponent).string)
+            }
+        }
+
+        let ldid = try context.tool(named: "ldid").path
+        let process = Process()
+        process.executableURL = URL(filePath: ldid.string)
+        process.arguments = ["-S\(entitlements)"] + (identity.map { ["-K\($0)"] } ?? []) + [appDirPath.string]
+        try process.run()
+        process.waitUntilExit()
+
+        print("output: \(appDirPath)")
+    }
+}
+
+struct StringError: Error, CustomStringConvertible {
+    var description: String
+    init(_ description: String) {
+        self.description = description
     }
 }
