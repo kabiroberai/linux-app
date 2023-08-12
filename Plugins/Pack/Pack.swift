@@ -8,16 +8,6 @@ import Foundation
     ) async throws {
         print("Initializing...")
 
-        var extractor = ArgumentExtractor(arguments)
-        let identity = extractor.extractOption(named: "identity").first.map(Path.init)
-        let profile = extractor.extractOption(named: "profile").first.map(Path.init)
-
-        if identity == nil {
-            print("warning: No identity provided; will ad-hoc sign. Use '-' to make this explicit.")
-        } else if profile == nil {
-            print("warning: Signing without a profile.")
-        }
-
         let executables = context.package.products(ofType: ExecutableProduct.self)
         let executable: ExecutableProduct
         if executables.count == 1 {
@@ -40,12 +30,10 @@ import Foundation
         let resources = sourceModule.sourceFiles.filter { $0.type == .resource }
         guard let plist = resources.first(where: { $0.path.lastComponent == "PackInfo.plist" })?.path
             else { throw StringError("Expected main target to contain a PackInfo.plist") }
-        guard let entitlements = resources.first(where: { $0.path.lastComponent == "\(executable.name).entitlements" })?.path
-            else { throw StringError("Expected main target to contain an \(executable.name).entitlements") }
 
         let buildDir = execPath.removingLastComponent()
 
-        var filesToCopy = [execPath] + (profile.map { [$0] } ?? [])
+        var filesToCopy = [execPath]
         var targets = executable.targets
         while let target = targets.popLast() {
             if let binaryTarget = target as? BinaryArtifactTarget {
@@ -70,27 +58,9 @@ import Foundation
         }
 
         for file in filesToCopy {
-            switch file {
-            case plist:
-                try FileManager.default.copyItem(atPath: file.string, toPath: appDirPath.appending("Info.plist").string)
-            case profile:
-                try FileManager.default.copyItem(
-                    atPath: file.string,
-                    toPath: appDirPath.appending("embedded.mobileprovision").string
-                )
-            case entitlements:
-                break
-            default:
-                try FileManager.default.copyItem(atPath: file.string, toPath: appDirPath.appending(file.lastComponent).string)
-            }
+            let filename = file == plist ? "Info.plist" : file.lastComponent
+            try FileManager.default.copyItem(atPath: file.string, toPath: appDirPath.appending(filename).string)
         }
-
-        let ldid = try context.tool(named: "ldid").path
-        let process = Process()
-        process.executableURL = URL(filePath: ldid.string)
-        process.arguments = ["-S\(entitlements)"] + (identity.map { ["-K\($0)"] } ?? []) + [appDirPath.string]
-        try process.run()
-        process.waitUntilExit()
 
         print("output: \(appDirPath)")
     }
