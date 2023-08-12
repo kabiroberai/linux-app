@@ -37,7 +37,7 @@ import Foundation
         var targets = executable.targets
         while let target = targets.popLast() {
             if let binaryTarget = target as? BinaryArtifactTarget {
-                filesToCopy += [binaryTarget.artifact]
+                filesToCopy += [buildDir.appending("\(binaryTarget.name).framework")]
             } else if let sourceTarget = target as? SourceModuleTarget {
                 filesToCopy += sourceTarget.sourceFiles.filter { $0.type == .resource }.map(\.path)
             }
