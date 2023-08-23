@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "pow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/movingparts-io/Pow",
+      "state" : {
+        "revision" : "c675f0b3792e4fb456a0cbb93afc3059e81e1809",
+        "version" : "0.3.1"
+      }
+    }
+  ],
+  "version" : 2
+}
